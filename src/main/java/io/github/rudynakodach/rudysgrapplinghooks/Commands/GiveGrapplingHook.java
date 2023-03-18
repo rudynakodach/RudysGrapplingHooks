@@ -48,8 +48,14 @@ public class GiveGrapplingHook implements CommandExecutor {
             meta.setUnbreakable(true);
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
             meta.getPersistentDataContainer().set(grappleKey, PersistentDataType.INTEGER, maxDurability);
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&c&lGrappler &r&7T" + tier));
-            meta.setLore(List.of(ChatColor.translateAlternateColorCodes('&', "&c" + maxDurability + " &rusages left.")));
+            if(plugin.getConfig().getBoolean("hooks." + tier + ".isUnbreakable")) {
+                meta.setLore(List.of(ChatColor.translateAlternateColorCodes('&', "&e&lUnbreakable")));
+            } else {
+                meta.setLore(List.of(ChatColor.translateAlternateColorCodes('&', "&c" + maxDurability + "&f usages left.")));
+            }
+            char altChar = plugin.getConfig().getString("hooks." + tier + ".altColorChar").charAt(0);
+            String itemName = plugin.getConfig().getString("hooks." + tier + ".name");
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes(altChar, itemName));
 
             grappleStack.setItemMeta(meta);
 
