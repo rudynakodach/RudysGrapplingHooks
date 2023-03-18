@@ -1,0 +1,13 @@
+name: RudysGrapplingHooks
+version: '${project.version}'
+main: io.github.rudynakodach.rudysgrapplinghooks.RudysGrapplingHooks
+api-version: 1.19
+
+commands:
+  givegh:
+    usage: /givegh <tier>
+    permission: rudysgh.givegh
+
+  givebh:
+    usage: /givebh
+    permission: rudysgh.givebh
