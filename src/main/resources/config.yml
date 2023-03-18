@@ -2,21 +2,44 @@
 # TIERS MUST BE INTEGERS!!!
 # delay should be provided in millis
 
+# if isUnbreakable is true, durability doesn't matter
 hooks:
   1:
+    altColorChar: '&'
+    name: "&c&lGrappler &r&7T1"
     durability: 64
     delay: 7500
     isUnbreakable: false
     power: 0.75
 
   2:
+    altColorChar: '&'
+    name: "&c&lGrappler &r&7T2"
     durability: 96
     delay: 6000
     isUnbreakable: false
     power: 1
 
   3:
-    durability: 120
+    altColorChar: '&'
+    name: "&c&lGrappler &r&7T3"
+    durability: 128
     delay: 4500
     isUnbreakable: false
     power: 1.25
+
+  4:
+    altColorChar: '&'
+    name: "&c&lGrappler &r&7T4"
+    durability: 512
+    delay: 3000
+    isUnbreakable: false
+    power: 1.50
+
+  5:
+    altColorChar: '&'
+    name: "&c&lGrappler &r&7T5"
+    durability: 0
+    delay: 2500
+    isUnbreakable: true
+    power: 2
