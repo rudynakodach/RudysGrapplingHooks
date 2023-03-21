@@ -1,5 +1,6 @@
 package io.github.rudynakodach.rudysgrapplinghooks.Events;
 
+import io.github.rudynakodach.rudysgrapplinghooks.Modules.BowHookUsage;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -14,15 +15,16 @@ import org.bukkit.util.Vector;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
-public class ProjectileLaunchEventHandler implements Listener {
+public class ProjectileEventHandler implements Listener {
 
     private final JavaPlugin plugin;
-    public ProjectileLaunchEventHandler(JavaPlugin plugin) {
+    public ProjectileEventHandler(JavaPlugin plugin) {
         this.plugin = plugin;
     }
 
-    private HashMap<UUID, Entity> arrowMap = new HashMap<>();
+    private HashMap<UUID, BowHookUsage> arrowMap = new HashMap<>();
 
     @EventHandler
     public void onProjectileLaunch(ProjectileLaunchEvent e) {
@@ -52,61 +54,31 @@ public class ProjectileLaunchEventHandler implements Listener {
             return;
         }
 
-        Bat bat = (Bat) e.getEntity().getWorld().spawnEntity(e.getEntity().getLocation(), EntityType.BAT);
-        bat.setAwake(false);
-        bat.setGravity(false);
-        bat.setAI(false);
-        bat.setCollidable(false);
-        bat.setInvulnerable(true);
-        bat.setInvisible(true);
-        bat.setAware(false);
-
-        LeashHitch rope = shooter.getLocation().getWorld().spawn(shooter.getLocation(), LeashHitch.class);
-        rope.setInvulnerable(true);
-        bat.setLeashHolder(shooter);
+        Bat bat = (Bat) e.getEntity().getWorld().spawnEntity(new Location(e.getEntity().getWorld(), 0,0,0), EntityType.BAT);
+        LeashHitch rope = shooter.getWorld().spawn(new Location(e.getEntity().getWorld(), 0,0,0), LeashHitch.class);
 
         arrow.addPassenger(bat);
+        arrowMap.put(arrow.getUniqueId(), new BowHookUsage(
+                bat,
+                rope,
+                arrow,
+                shooter
+        ));
     }
 
     @EventHandler
     public void onProjectileLand(ProjectileHitEvent e) {
-        if(!(e.getEntity() instanceof Arrow)) {
+        if(!arrowMap.containsKey(e.getEntity().getUniqueId())) {
             return;
         }
-
         Arrow arrow = (Arrow) e.getEntity();
-
-        // the shooter was not a player
-        if(!(arrow.getShooter() instanceof Player)) {
-            return;
-        }
-
         Player shooter = (Player)arrow.getShooter();
         List<Entity> passengers = arrow.getPassengers();
 
-        //no passengers on this arrow
-        if(passengers.size() == 0) {
-            return;
-        }
-
-        boolean hasBatPassengers = false;
-        for (Entity entity : passengers) {
-            if(!(entity instanceof Bat)) {
-                continue;
-            }
-            LivingEntity livingEntity = (LivingEntity) entity;
-            if(livingEntity.isLeashed()) {
-                if(livingEntity.getLeashHolder() instanceof LeashHitch) {
-                    livingEntity.getLeashHolder().remove();
-                }
-                hasBatPassengers = true;
-                livingEntity.remove();
-                break;
-            }
-        }
-
-        //no bat passengers found - not a valid arrow
-        if(!hasBatPassengers) {return;}
+        BowHookUsage usage = arrowMap.get(e.getEntity().getUniqueId());
+        usage.removeLeash();
+        usage.removeBat();
+        usage.removeArrow();
 
         Location arrowLocation = arrow.getLocation();
         Location playerLocation = shooter.getLocation();

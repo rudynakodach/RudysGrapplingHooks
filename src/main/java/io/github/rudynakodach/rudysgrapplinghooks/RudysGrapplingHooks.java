@@ -3,7 +3,7 @@ package io.github.rudynakodach.rudysgrapplinghooks;
 import io.github.rudynakodach.rudysgrapplinghooks.Commands.GiveBowHook;
 import io.github.rudynakodach.rudysgrapplinghooks.Commands.GiveGrapplingHook;
 import io.github.rudynakodach.rudysgrapplinghooks.Events.PlayerFishEventHandler;
-import io.github.rudynakodach.rudysgrapplinghooks.Events.ProjectileLaunchEventHandler;
+import io.github.rudynakodach.rudysgrapplinghooks.Events.ProjectileEventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -27,8 +27,8 @@ public final class RudysGrapplingHooks extends JavaPlugin {
         PlayerFishEventHandler playerFishEventHandler = new PlayerFishEventHandler(this);
         getServer().getPluginManager().registerEvents(playerFishEventHandler, this);
 
-        ProjectileLaunchEventHandler projectileLaunchEventHandler = new ProjectileLaunchEventHandler(this);
-        getServer().getPluginManager().registerEvents(projectileLaunchEventHandler, this);
+        ProjectileEventHandler projectileEventHandler = new ProjectileEventHandler(this);
+        getServer().getPluginManager().registerEvents(projectileEventHandler, this);
     }
 
     // Plugin shutdown logic
