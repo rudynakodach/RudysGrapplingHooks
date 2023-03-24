@@ -122,16 +122,14 @@ public class PlayerFishEventHandler implements Listener {
             Vector direction = hookLocation.toVector().subtract(playerLocation.toVector()).normalize();
             double speed = plugin.getConfig().getDouble("hooks." + meta.getCustomModelData() + ".power"); // Set the speed at which the player is pulled towards the hook
 
+            e.getPlayer().playSound(playerLocation, Sound.ENTITY_BAT_TAKEOFF, 2, 1.2f);
             e.getPlayer().setVelocity(direction.multiply(speed));
             delayMap.put(e.getPlayer().getName(), new GrapplingHookUsage(delay, System.currentTimeMillis()));
         } else if(e.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
             if(e.getCaught() instanceof Item) {
-                e.setExpToDrop(0);
-                Item drops = (Item) e.getCaught();
-                ItemStack dropsStack = drops.getItemStack();
-                dropsStack.setType(Material.AIR);
                 e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 1f);
                 e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou can't fish with a grappling hook!"));
+                e.setCancelled(true);
             }
         }
     }
